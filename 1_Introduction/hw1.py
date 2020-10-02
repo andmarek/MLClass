@@ -4,13 +4,13 @@ import sklearn.neural_network
 import numpy
 import matplotlib.pyplot
 
-import itertools 
+import itertools
 
 def test_NN(Ts, Hs, max_iter=200):
     NN = sklearn.neural_network.MLPRegressor(
-        hidden_layer_sizes=(4,4), 
-        activation='tanh', 
-        random_state = 1, 
+        hidden_layer_sizes=(4,4),
+        activation='tanh',
+        random_state = 1,
         max_iter=max_iter
         )
     Ts = Ts.reshape(-1, 1) # learned from error
@@ -20,12 +20,12 @@ def test_NN(Ts, Hs, max_iter=200):
     return score
 
 def learning_curve(Ts, Hs, filename):
-    max_iters, scores = None, None # place holder 
-    # INSERT YOUR CODE HERE 
-    
+    max_iters, scores = None, None # place holder
+    # INSERT YOUR CODE HERE
+
     return max_iters, scores
 
-def self_checker(*args): 
+def self_checker(*args):
     X, y = learning_curve(*args)
     print (type(X), X)
     print (type(y), y)
