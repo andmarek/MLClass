@@ -40,6 +40,7 @@ Examples
     # Weight average for the leaf nodes
     gini_impurity = 0
 
+
     f_c1 = feature_values[labels == +1]
     f_c2 = feature_values[labels == -1]
 
@@ -54,14 +55,13 @@ Examples
         if polarity(val, threshold):
             v_2.append(val)
 
+    if len(v_1) + len(v_2) == 0:
+        return 1
+
     p1 = len(v_1) / (len(v_1) + len(v_2)) # number / total in class
     p2 = len(v_2) / (len(v_1) + len(v_2)) # number / total in class
 
     gini_impurity = (1 - ((p2**2) + (p1**2)))
-
-    #print("gini_impurity\n", gini_impurity)
-    # YOUR CODE HERE
-
 
     return gini_impurity
 
@@ -89,8 +89,32 @@ def estimate_gini_impurity_expectation(feature_values, threshold, labels):
     0.5
 
     """
+    expectation = 0
 
-    # YOUR CODE HERE
+    f_c1 = feature_values[labels == +1]
+    f_c2 = feature_values[labels == -1]
+
+    n_gt = 0
+    n_le = 0
+
+    for val in f_c1:
+        if operator.gt(val, threshold):
+            n_gt+=1
+        if operator.le(val, threshold):
+            n_le+=1
+    for val in f_c2:
+        if operator.gt(val, threshold):
+            n_gt+=1
+        if operator.le(val, threshold):
+            n_le += 1
+
+    p_gt = n_gt / (len(f_c1) + len(f_c2))
+    p_le = n_le / (len(f_c1) + len(f_c2))
+
+
+    left = estimate_gini_impurity(feature_values, threshold, labels, operator.gt) * p_gt
+    right = estimate_gini_impurity(feature_values, threshold, labels, operator.le) * p_le
+    expectation = (left + right)
 
     return expectation
 
@@ -212,7 +236,20 @@ if __name__ == "__main__":
     #doctest.testmod()
     #you_rock(1000, 100, 3)
 
+    '''
     feature_values = numpy.array([1,2,3,4,5,6,7,8])
     labels = numpy.array([+1,+1,+1,+1, -1,-1,-1,-1])
     for threshold in range(0,8):
         estimate_gini_impurity(feature_values, threshold, labels, operator.gt)
+
+    feature_values = numpy.array([12, 4, 5, 6, 7, 8, 9, 11])
+    labels = numpy.array([1, 1, 1, 1, -1, -1, -1, -1])
+    ff = estimate_gini_impurity(feature_values, 10, labels, operator.gt)
+    pp = estimate_gini_impurity(feature_values, 5, labels, operator.gt)
+    '''
+    feature_values = numpy.array([1,2,3,4,5,6,7,8])
+    labels = numpy.array([+1,+1,+1,+1, -1,-1,-1,-1])
+    for threshold in range(0,9):
+        estimate_gini_impurity_expectation(feature_values, threshold, labels)
+
+    #print(pp)
